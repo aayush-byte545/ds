@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define a node structure
+struct Node {
+    int data;           // Data part of the node
+    struct Node* next;  // Pointer to the next node
+};
+
+// Function to create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) {
+        printf("Memory allocation failed!\n");
+        exit(1); // Exit if memory allocation fails
+    }
+    newNode->data = value; // Set the node's data
+    newNode->next = newNode;  // Point to itself to form a circular link
+    return newNode;        // Return the created node
+}
+
+// Function to insert a node at the beginning of the circular linked list
+void insertAtBeginning(struct Node** head, int value) {
+    struct Node* newNode = createNode(value); // Create a new node
+
+    // If the list is empty, initialize it with the new node
+    if (*head == NULL) {
+        *head = newNode; // Point head to the new node
+    } else {
+        struct Node* temp = *head; // Temporary pointer to find the last node
+
+        // Traverse to the last node
+        while (temp->next != *head) {
+            temp = temp->next; // Move to the next node
+        }
+        
+        // Point the last node's next to the new node
+        temp->next = newNode; // Link last node to the new node
+    }
+    
+    // Link the new node back to the head
+    newNode->next = *head; // Complete the circular link
+    *head = newNode;       // Update the head pointer
+}
+
+// Function to display the circular linked list
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+    
+    struct Node* temp = head; // Temporary pointer to traverse the list
+    printf("Circular Linked List: ");
+    do {
+        printf("%d -> ", temp->data); // Print current node's data
+        temp = temp->next;             // Move to the next node
+    } while (temp != head); // Loop until we return to the head
+    printf("(head)\n"); // Indicate that we've looped back to the head
+}
+
+// Example usage
+int main() {
+    struct Node* head = NULL; // Initialize the head of the list
+
+    // Insert elements at the beginning
+    insertAtBeginning(&head, 30);
+    insertAtBeginning(&head, 20);
+    insertAtBeginning(&head, 10);
+
+    // Display the circular linked list
+    displayList(head);
+
+    return 0;
+}
+
+output
+Circular Linked List: 10 -> 20 -> 30 -> (head)
