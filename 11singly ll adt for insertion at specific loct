@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define a node structure
+struct Node {
+    int data;           // Data part of the node
+    struct Node* next;  // Pointer to the next node
+};
+
+// Function to create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) {
+        printf("Memory allocation failed!\n");
+        exit(1); // Exit if memory allocation fails
+    }
+    newNode->data = value; // Set the node's data
+    newNode->next = NULL;  // Set the next pointer to NULL
+    return newNode;        // Return the created node
+}
+
+// Function to insert a node at a specific location
+void insertAtPosition(struct Node** head, int value, int position) {
+    struct Node* newNode = createNode(value); // Create a new node
+
+    // If the position is 0, insert at the beginning
+    if (position == 0) {
+        newNode->next = *head;  // Link the new node to the current head
+        *head = newNode;        // Update the head to the new node
+        printf("%d inserted at position %d (beginning).\n", value, position);
+        return;
+    }
+
+    // Traverse to the position just before the desired location
+    struct Node* temp = *head;
+    for (int i = 0; temp != NULL && i < position - 1; i++) {
+        temp = temp->next; // Move to the next node
+    }
+
+    // If temp is NULL, the position is greater than the number of nodes
+    if (temp == NULL) {
+        printf("Position %d is out of bounds. Insertion failed.\n", position);
+        free(newNode); // Free the allocated node
+        return;
+    }
+
+    // Insert the new node at the desired position
+    newNode->next = temp->next; // Link the new node to the next node
+    temp->next = newNode;        // Link the previous node to the new node
+    printf("%d inserted at position %d.\n", value, position);
+}
+
+// Function to display the linked list
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+    
+    struct Node* temp = head; // Temporary pointer to traverse the list
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data); // Print current node's data
+        temp = temp->next;             // Move to the next node
+    }
+    printf("NULL\n"); // Indicate the end of the list
+}
+
+// Example usage
+int main() {
+    struct Node* head = NULL; // Initialize the head of the list
+
+    // Insert elements at specific positions
+    insertAtPosition(&head, 10, 0); // Insert 10 at position 0
+    insertAtPosition(&head, 20, 1); // Insert 20 at position 1
+    insertAtPosition(&head, 15, 1); // Insert 15 at position 1 (between 10 and 20)
+    insertAtPosition(&head, 30, 3); // Insert 30 at position 3 (end)
+
+    // Display the linked list
+    displayList(head);
+
+    return 0;
+}
+
+output
+10 inserted at position 0 (beginning).
+20 inserted at position 1.
+15 inserted at position 1.
+30 inserted at position 3.
+Linked List: 10 -> 15 -> 20 -> 30 -> NULL
