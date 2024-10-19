@@ -71,3 +71,9 @@ int main() {
     
     return 0;
 }
+
+output
+Popped element: 30
+Popped element: 20
+Popped element: 10
+Stack underflow! Cannot pop from an empty stack.
