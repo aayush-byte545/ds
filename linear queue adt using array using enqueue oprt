@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100  // Define the maximum size of the queue
+
+// Queue structure
+struct Queue {
+    int arr[MAX];  // Array to hold queue elements
+    int front;     // Index of the front element
+    int rear;      // Index of the rear element
+};
+
+// Function to initialize the queue
+void initQueue(struct Queue* queue) {
+    queue->front = -1;  // Front index
+    queue->rear = -1;   // Rear index
+}
+
+// Function to check if the queue is empty
+int isEmpty(struct Queue* queue) {
+    return queue->front == -1;
+}
+
+// Function to check if the queue is full
+int isFull(struct Queue* queue) {
+    return queue->rear == MAX - 1;
+}
+
+// Function to enqueue an element
+void enqueue(struct Queue* queue, int value) {
+    if (isFull(queue)) {
+        printf("Queue Overflow! Cannot enqueue %d.\n", value);
+        return;
+    }
+    
+    // If queue is initially empty
+    if (isEmpty(queue)) {
+        queue->front = 0;  // Set front to 0
+    }
+
+    // Increment rear and add the new value
+    queue->arr[++(queue->rear)] = value;
+    printf("%d enqueued to the queue.\n", value);
+}
+
+// Function to display the queue (for demonstration purposes)
+void display(struct Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is empty.\n");
+        return;
+    }
+    
+    printf("Queue elements: ");
+    for (int i = queue->front; i <= queue->rear; i++) {
+        printf("%d ", queue->arr[i]);
+    }
+    printf("\n");
+}
+
+// Example usage
+int main() {
+    struct Queue queue;
+    initQueue(&queue);
+
+    enqueue(&queue, 10);
+    enqueue(&queue, 20);
+    enqueue(&queue, 30);
+    
+    display(&queue);
+
+    enqueue(&queue, 40);  // Testing Queue Overflow
+    display(&queue);
+    
+    return 0;
+}
+
+output
+10 enqueued to the queue.
+20 enqueued to the queue.
+30 enqueued to the queue.
+Queue elements: 10 20 30 
+Queue Overflow! Cannot enqueue 40.
+Queue elements: 10 20 30 
