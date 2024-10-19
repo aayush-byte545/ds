@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+#define MAX 100  // Maximum size of the stack
+
+// Stack structure
+struct Stack {
+    int arr[MAX];
+    int top;
+};
+
+// Function to initialize the stack
+void initStack(struct Stack* stack) {
+    stack->top = -1;
+}
+
+// Function to check if the stack is empty
+int isEmpty(struct Stack* stack) {
+    return stack->top == -1;
+}
+
+// Function to push an element onto the stack
+void push(struct Stack* stack, int value) {
+    if (stack->top == MAX - 1) {
+        printf("Stack Overflow! Cannot push %d onto the stack.\n", value);
+        return;
+    }
+    stack->arr[++(stack->top)] = value;  // Increment top and push value
+}
+
+// Function to pop an element from the stack
+int pop(struct Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack Underflow! Cannot pop from an empty stack.\n");
+        return -1;  // Return -1 if stack is empty
+    }
+    return stack->arr[(stack->top)--];  // Return the top element and decrement top
+}
+
+// Function to evaluate a postfix expression
+int evaluatePostfix(const char* postfix) {
+    struct Stack stack;
+    initStack(&stack);
+    int i = 0;
+
+    while (postfix[i] != '\0') {
+        char token = postfix[i];
+
+        if (isdigit(token)) {  // If the token is an operand
+            // Convert char to int and push it onto the stack
+            push(&stack, token - '0');  // Assuming single-digit operands
+        } else {  // If the token is an operator
+            int operand2 = pop(&stack);  // Pop the top two operands
+            int operand1 = pop(&stack);
+
+            int result;
+            switch (token) {
+                case '+':
+                    result = operand1 + operand2;
+                    break;
+                case '-':
+                    result = operand1 - operand2;
+                    break;
+                case '*':
+                    result = operand1 * operand2;
+                    break;
+                case '/':
+                    if (operand2 == 0) {
+                        printf("Division by zero error!\n");
+                        return -1;  // Return -1 to indicate error
+                    }
+                    result = operand1 / operand2;
+                    break;
+                default:
+                    printf("Unknown operator %c!\n", token);
+                    return -1;  // Return -1 to indicate error
+            }
+            push(&stack, result);  // Push the result back onto the stack
+        }
+        i++;
+    }
+
+    return pop(&stack);  // The final result will be the only element left in the stack
+}
+
+// Example usage
+int main() {
+    char postfix[MAX];
+
+    // Input postfix expression
+    printf("Enter a postfix expression: ");
+    fgets(postfix, sizeof(postfix), stdin);
+
+    int result = evaluatePostfix(postfix);
+
+    if (result != -1) {
+        printf("The result of the postfix expression is: %d\n", result);
+    }
+
+    return 0;
+}
+
+    output
+    Enter a postfix expression: 23 4 + 5 *
+The result of the postfix expression is: 35
