@@ -1,0 +1,133 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 5  // Define the maximum size of the queue
+
+// Circular Queue structure
+struct CircularQueue {
+    int arr[MAX];  // Array to hold queue elements
+    int front;     // Index of the front element
+    int rear;      // Index of the rear element
+};
+
+// Function to initialize the circular queue
+void initQueue(struct CircularQueue* queue) {
+    queue->front = -1;  // Front index
+    queue->rear = -1;   // Rear index
+}
+
+// Function to check if the queue is empty
+int isEmpty(struct CircularQueue* queue) {
+    return queue->front == -1;  // Queue is empty if front is -1
+}
+
+// Function to check if the queue is full
+int isFull(struct CircularQueue* queue) {
+    return (queue->rear + 1) % MAX == queue->front;  // Queue is full if next rear is front
+}
+
+// Function to enqueue an element
+void enqueue(struct CircularQueue* queue, int value) {
+    if (isFull(queue)) {
+        printf("Queue Overflow! Cannot enqueue %d.\n", value);
+        return;
+    }
+
+    // If the queue is initially empty
+    if (isEmpty(queue)) {
+        queue->front = 0;  // Set front to 0
+    }
+
+    // Circular increment of rear index
+    queue->rear = (queue->rear + 1) % MAX;  // Move rear to next position
+    queue->arr[queue->rear] = value;  // Add the new value
+    printf("%d enqueued to the queue.\n", value);
+}
+
+// Function to dequeue an element
+int dequeue(struct CircularQueue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue Underflow! Cannot dequeue from an empty queue.\n");
+        return -1;  // Return -1 to indicate an error
+    }
+
+    int value = queue->arr[queue->front];  // Get the front element
+
+    // If the queue has only one element, reset front and rear
+    if (queue->front == queue->rear) {
+        queue->front = -1;  // Reset front and rear to indicate queue is empty
+        queue->rear = -1;
+    } else {
+        // Circular increment of front index
+        queue->front = (queue->front + 1) % MAX;  // Move front to next position
+    }
+
+    printf("%d dequeued from the queue.\n", value);
+    return value;  // Return the dequeued value
+}
+
+// Function to display the queue (for demonstration purposes)
+void display(struct CircularQueue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is empty.\n");
+        return;
+    }
+
+    printf("Queue elements: ");
+    int i = queue->front;
+    while (1) {
+        printf("%d ", queue->arr[i]);
+        if (i == queue->rear) {
+            break;  // Stop when we reach the rear
+        }
+        i = (i + 1) % MAX;  // Circular increment
+    }
+    printf("\n");
+}
+
+// Example usage
+int main() {
+    struct CircularQueue queue;
+    initQueue(&queue);
+
+    // Enqueue some elements
+    enqueue(&queue, 10);
+    enqueue(&queue, 20);
+    enqueue(&queue, 30);
+    display(&queue);
+
+    // Dequeue some elements
+    dequeue(&queue);
+    display(&queue);
+
+    dequeue(&queue);
+    display(&queue);
+
+    // Enqueue more elements
+    enqueue(&queue, 40);
+    enqueue(&queue, 50);
+    display(&queue);
+
+    // Test underflow condition
+    dequeue(&queue);
+    dequeue(&queue);
+    dequeue(&queue);  // This should show underflow message
+
+    return 0;
+}
+
+output
+10 enqueued to the queue.
+20 enqueued to the queue.
+30 enqueued to the queue.
+Queue elements: 10 20 30 
+10 dequeued from the queue.
+Queue elements: 20 30 
+20 dequeued from the queue.
+Queue elements: 30 
+40 enqueued to the queue.
+50 enqueued to the queue.
+Queue elements: 30 40 50 
+30 dequeued from the queue.
+Queue is empty.
+Queue Underflow! Cannot dequeue from an empty queue.
