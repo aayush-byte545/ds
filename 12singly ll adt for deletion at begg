@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define a node structure
+struct Node {
+    int data;           // Data part of the node
+    struct Node* next;  // Pointer to the next node
+};
+
+// Function to create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) {
+        printf("Memory allocation failed!\n");
+        exit(1); // Exit if memory allocation fails
+    }
+    newNode->data = value; // Set the node's data
+    newNode->next = NULL;  // Set the next pointer to NULL
+    return newNode;        // Return the created node
+}
+
+// Function to insert a node at the end of the linked list
+void insertAtEnd(struct Node** head, int value) {
+    struct Node* newNode = createNode(value); // Create a new node
+
+    // If the linked list is empty, make the new node the head
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+
+    // Otherwise, traverse to the last node
+    struct Node* temp = *head;
+    while (temp->next != NULL) {
+        temp = temp->next; // Move to the next node
+    }
+    
+    // Link the last node to the new node
+    temp->next = newNode;
+}
+
+// Function to delete a node from the beginning of the linked list
+void deleteAtBeginning(struct Node** head) {
+    if (*head == NULL) {
+        printf("The list is empty. Nothing to delete.\n");
+        return;
+    }
+
+    struct Node* temp = *head; // Temporary pointer to the current head
+    *head = (*head)->next;     // Move the head pointer to the next node
+    printf("Deleted node with value: %d\n", temp->data);
+    free(temp);                // Free the memory allocated for the deleted node
+}
+
+// Function to display the linked list
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+    
+    struct Node* temp = head; // Temporary pointer to traverse the list
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data); // Print current node's data
+        temp = temp->next;             // Move to the next node
+    }
+    printf("NULL\n"); // Indicate the end of the list
+}
+
+// Example usage
+int main() {
+    struct Node* head = NULL; // Initialize the head of the list
+
+    // Insert elements at the end
+    insertAtEnd(&head, 10);
+    insertAtEnd(&head, 20);
+    insertAtEnd(&head, 30);
+
+    // Display the linked list
+    displayList(head);
+
+    // Delete elements from the beginning
+    deleteAtBeginning(&head);
+    displayList(head);
+
+    deleteAtBeginning(&head);
+    displayList(head);
+
+    deleteAtBeginning(&head);
+    displayList(head);
+
+    // Attempt to delete from an empty list
+    deleteAtBeginning(&head);
+
+    return 0;
+}
+
+ output
+ Linked List: 10 -> 20 -> 30 -> NULL
+Deleted node with value: 10
+Linked List: 20 -> 30 -> NULL
+Deleted node with value: 20
+Linked List: 30 -> NULL
+Deleted node with value: 30
+Linked List: The list is empty.
+The list is empty. Nothing to delete.
