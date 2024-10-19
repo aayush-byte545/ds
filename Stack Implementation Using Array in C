@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 5  // Maximum size of the stack
+
+// Define a structure to represent a stack
+struct Stack {
+    int arr[MAX];  // Array to store stack elements
+    int top;       // Top pointer to indicate the index of the top element
+};
+
+// Function to initialize the stack
+void initStack(struct Stack *stack) {
+    stack->top = -1;  // Initialize the top pointer to -1 (indicating empty stack)
+}
+
+// Function to check if the stack is full
+int isFull(struct Stack *stack) {
+    return stack->top == MAX - 1;
+}
+
+// Function to check if the stack is empty
+int isEmpty(struct Stack *stack) {
+    return stack->top == -1;
+}
+
+// Function to push an element onto the stack
+void push(struct Stack *stack, int value) {
+    if (isFull(stack)) {
+        printf("Stack Overflow! Cannot push %d\n", value);
+        return;
+    }
+    stack->arr[++stack->top] = value;  // Increment top and add value to the stack
+    printf("%d pushed to stack\n", value);
+}
+
+// Function to display the stack elements
+void display(struct Stack *stack) {
+    if (isEmpty(stack)) {
+        printf("Stack is empty\n");
+        return;
+    }
+    printf("Stack elements: ");
+    for (int i = 0; i <= stack->top; i++) {
+        printf("%d ", stack->arr[i]);
+    }
+    printf("\n");
+}
+
+// Main function
+int main() {
+    struct Stack stack;
+    initStack(&stack);
+
+    push(&stack, 10);
+    push(&stack, 20);
+    push(&stack, 30);
+    push(&stack, 40);
+    push(&stack, 50);  // Should push successfully
+    push(&stack, 60);  // Should display "Stack Overflow" since the stack is full
+
+    display(&stack);   // Display stack elements
+
+    return 0;
+}
