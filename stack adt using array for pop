@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100  // Maximum size of the stack
+
+// Define the stack structure
+typedef struct {
+    int items[MAX];
+    int top;
+} Stack;
+
+// Function to initialize the stack
+void initialize(Stack* stack) {
+    stack->top = -1;  // When the stack is empty, the top is -1
+}
+
+// Check if the stack is full
+int isFull(Stack* stack) {
+    return stack->top == MAX - 1;
+}
+
+// Check if the stack is empty
+int isEmpty(Stack* stack) {
+    return stack->top == -1;
+}
+
+// Push function to add an element to the stack
+void push(Stack* stack, int value) {
+    if (isFull(stack)) {
+        printf("Stack overflow!\n");
+        return;
+    }
+    stack->items[++stack->top] = value;
+}
+
+// Pop function to remove and return the top element of the stack
+int pop(Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack underflow! Cannot pop from an empty stack.\n");
+        return -1;  // Return -1 if the stack is empty
+    }
+    return stack->items[stack->top--];
+}
+
+// Peek function to get the top element without removing it
+int peek(Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack is empty!\n");
+        return -1;
+    }
+    return stack->items[stack->top];
+}
+
+// Main function to test the stack operations
+int main() {
+    Stack stack;
+    initialize(&stack);
+    
+    // Test push operation
+    push(&stack, 10);
+    push(&stack, 20);
+    push(&stack, 30);
+    
+    // Test pop operation
+    printf("Popped element: %d\n", pop(&stack)); // Should print 30
+    printf("Popped element: %d\n", pop(&stack)); // Should print 20
+    
+    // Test underflow condition
+    pop(&stack); // Should pop 10
+    pop(&stack); // Should show underflow message
+    
+    return 0;
+}
