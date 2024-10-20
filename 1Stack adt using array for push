@@ -63,3 +63,12 @@ int main() {
 
     return 0;
 }
+
+output
+10 pushed to stack
+20 pushed to stack
+30 pushed to stack
+40 pushed to stack
+50 pushed to stack
+Stack Overflow! Cannot push 60
+Stack elements: 10 20 30 40 50 
